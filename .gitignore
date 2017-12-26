@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+# php files
+*.ini
+
 # Compiled Object files
 *.slo
 *.lo
