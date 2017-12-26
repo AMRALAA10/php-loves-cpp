@@ -1,5 +1,17 @@
 #include <phpcpp.h>
 #include <iostream>
+#include "miaxis_api.h"
+
+void device_version()
+{
+    char version[100] = {0};
+    mxGetVersion(version);
+    Php::out << version << std::endl;
+}
+
+/**
+ * rm main.o yourextension.so && make && sudo make install
+*/
 
 /**
  *  Native function that is callable from PHP
@@ -65,6 +77,9 @@ extern "C" {
 
         // add the example function so that it can be called from PHP scripts
         extension.add("example_function", example_function);
+
+        //add device version function
+        extension.add("device_version", device_version);
 
         // return the extension details
         return extension;

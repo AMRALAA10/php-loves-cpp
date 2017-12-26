@@ -6,13 +6,15 @@
     }
 
     // example input
-    $input = array(
-        'x' =>  10,
-        'y' =>  20,
-        'z' =>  30
-    );
+    // $input = array(
+    //     'x' =>  10,
+    //     'y' =>  20,
+    //     'z' =>  30
+    // );
 
-    example_function($input, function($param1, $param2) {
-        echo("lambda function called with param $param1 $param2\n");
-    });
+    device_version();
+
+    // example_function($input, function($param1, $param2) {
+    //     echo("lambda function called with param $param1 $param2\n");
+    // });
 ?>
