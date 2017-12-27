@@ -1,64 +1,58 @@
 #include <phpcpp.h>
 #include <iostream>
+#include <string>
+#include <algorithm>
 #include "miaxis_api.h"
 
-void device_version()
-{
-    char version[100] = {0};
-    mxGetVersion(version);
-    Php::out << version << std::endl;
-}
-
 /**
- * rm main.o yourextension.so && make && sudo make install
+ * To build 
+ * rm main.o fingerprintmatcher.so && make && sudo make install
 */
 
-/**
- *  Native function that is callable from PHP
- *
- *  This function gets two parameters: an associative array and a callback.
- *  It does not do anything meaningful, it is just a demonstration function.
- *
- *  @param  params      The parameters passed to the function
- */
-void example_function(Php::Parameters &params)
-{
-    // first parameter is an array
-    Php::Value array = params[0];
-
-    // call the PHP array_keys() function to get the parameter keys
-    std::vector<std::string> keys = Php::array_keys(array);
-
-    // loop through the keys
-    for (auto &key : keys) 
-    {
-        // output key
-        Php::out << "key: " << key << std::endl;
-    }
-
-    // call a function from user space
-    Php::Value data = Php::call("some_function", "some_parameter");
-
-    // create an object (this will also call __construct())
-    Php::Object time("DateTime", "now");
-
-    // call a method on the datetime object
-    Php::out << time.call("format", "Y-m-d H:i:s") << std::endl;
-
-    // second parameter is a callback function
-    Php::Value callback = params[1];
-
-    // call the callback function
-    callback("some","parameter");
-
-    // in PHP it is possible to create an array with two parameters, the first
-    // parameter being an object, and the second parameter should be the name
-    // of the method, we can do that in PHP-CPP too
-    Php::Array time_format({time, "format"});
-
-    // call the method that is stored in the array
-    Php::out << time_format("Y-m-d H:i:s") << std::endl;
+/*
+*  Get the sdk version, this is usful to check the verion in php so 
+*  you make sure that you are using the correct functions
+*/
+Php::Value sdk_version()
+{    
+    char version[100] = {0};
+    mxGetVersion(version);
+    return version;
 }
+
+/*
+* Base 64 finger print matcher
+* you should pass 2 strings in base 64 of 2 finger prints
+*/
+Php::Value matcher_Base64(Php::Parameters &params){
+    /*
+        unsigned char tz[344+1] = {0};
+    	unsigned char mb[344+1] = {0};
+        ret = mxFingerMatchBase64(mb,tz,3);
+        if (ret != 0)
+        {
+            m_static_info.SetWindowText("match failed");
+        }
+        else
+        {
+            m_static_info.SetWindowText("match success");	
+        }
+    */
+    std::string print1 = params[0];
+    std::string print2 = params[1];
+    
+    unsigned char p1[344+1];
+    unsigned char p2[344+1];
+
+    copy(print1.begin(), print1.end(), p1);
+    copy(print2.begin(), print2.end(), p2);
+    
+    // pass 3 params
+    // first 2 is the 2 fingerprints strings
+    // third one the  security level
+    return mxFingerMatchBase64(p1, p2, 3) == 0;
+}
+
 
 /**
  *  Switch to C context, because the Zend engine expects get get_module()
@@ -73,13 +67,15 @@ extern "C" {
     PHPCPP_EXPORT void *get_module() 
     {
         // the extension object
-        static Php::Extension extension("my_extension", "1.0");
+        // this have to be static
+        static Php::Extension extension("fingerprintmatcher", "1.0");
 
-        // add the example function so that it can be called from PHP scripts
-        extension.add("example_function", example_function);
+        //add sdk version function
+        extension.add<sdk_version>("sdk_version");
 
-        //add device version function
-        extension.add("device_version", device_version);
+        //base64 fingerprint matcher
+        extension.add<matcher_Base64>("matcher_Base64");
+
 
         // return the extension details
         return extension;
