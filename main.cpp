@@ -20,10 +20,12 @@ Php::Value sdk_version()
     return version;
 }
 
-/*
-* Base 64 finger print matcher
-* you should pass 2 strings in base 64 of 2 finger prints
-*/
+/**
+ * Base 64 finger print matcher
+ * you should pass 2 strings in base 64 of 2 finger prints
+ * this function returns 0 when he match success, 
+ * any other number otherwise
+ */
 Php::Value matcher_Base64(Php::Parameters &params){
     /*
         unsigned char tz[344+1] = {0};
@@ -50,7 +52,7 @@ Php::Value matcher_Base64(Php::Parameters &params){
     // pass 3 params
     // first 2 is the 2 fingerprints strings
     // third one the  security level
-    return mxFingerMatchBase64(p1, p2, 3) == 0;
+    return mxFingerMatchBase64(p1, p2, 3);
 }
 
 

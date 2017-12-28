@@ -10,7 +10,8 @@ NAME				=	fingerprintmatcher
 #   for cli     -->  /etc/php/7.0/cli/conf.d
 #   for apache  -->  /etc/php/7.0/apache2/conf.d
 
-INI_DIR				=	/etc/php/7.0/cli/conf.d
+INI_DIR_cli			    =	/etc/php/7.0/apache2/conf.d
+INI_DIR_apache2			=	/etc/php/7.0/cli/conf.d
 
 
 #
@@ -95,7 +96,8 @@ ${OBJECTS}:
 
 install:		
 						${CP} ${EXTENSION} ${EXTENSION_DIR}
-						${CP} ${INI} ${INI_DIR}
+						${CP} ${INI} ${INI_DIR_cli}
+						${CP} ${INI} ${INI_DIR_apache2}
 				
 clean:
 						${RM} ${EXTENSION} ${OBJECTS}
