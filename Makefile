@@ -12,7 +12,7 @@ NAME				=	fingerprintmatcher
 
 INI_DIR_cli			    =	/etc/php/7.0/apache2/conf.d
 INI_DIR_apache2			=	/etc/php/7.0/cli/conf.d
-
+INI_DIR_fpm             =   /etc/php/7.0/fpm/config.d
 
 #
 #	The extension dirs
@@ -55,7 +55,7 @@ LINKER				=	g++
 
 COMPILER_FLAGS		=	-Wall -c -O2 -std=c++11 -fpic -o 
 LINKER_FLAGS		=	-shared
-LINKER_DEPENDENCIES	=	-lphpcpp -L. -l:./OpticalFingerVerifyUbuntu14_64.so
+LINKER_DEPENDENCIES	=	-lphpcpp -L. -l:./OpticalFingerVerifyUbuntu14_64.so -L:${EXTENSION_DIR}
 
 
 #
@@ -98,7 +98,13 @@ install:
 						${CP} ${EXTENSION} ${EXTENSION_DIR}
 						${CP} ${INI} ${INI_DIR_cli}
 						${CP} ${INI} ${INI_DIR_apache2}
-				
+		
+installs:		
+						${CP} ${EXTENSION} ${EXTENSION_DIR}
+						${CP} ${INI} ${INI_DIR_cli}
+						${CP} ${INI} ${INI_DIR_fpm}
+		
+
 clean:
 						${RM} ${EXTENSION} ${OBJECTS}
 
